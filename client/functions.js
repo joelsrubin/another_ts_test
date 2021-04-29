@@ -1,12 +1,11 @@
-"use strict";
-function search(query, callback, tags) {
+async function search(query, tags) {
     let queryString = `?query=${query}`;
     if (tags && tags.length) {
         queryString += `&tags=${tags.join()}`;
     }
-    return fetch(`/search${queryString}`)
-        .then(response => response.json())
-        .then(results => callback(results));
+    const response = await fetch(`/search${queryString}`);
+    const results = await response.json();
+    return results;
 }
 const query = {
     query: 'Ember',
@@ -53,3 +52,25 @@ function displaySearch(inputId, outputId, search) {
 //   abstract: `A practical book on ${query}`
 //   }])
 //  }
+const result = {
+    title: 'A guide to @@starthl@@Ember@@endhl@@.js',
+    url: '/a-guide-to-ember',
+    description: 'The framework @@starthl@@Ember@@endhl@@.js in a nutshell'
+};
+// replace @@starthl@@ with <mark> and @@endhl@@ with </mark>
+// let markup = highlight`<li>${result.title}</li>`
+// function highlight(
+//   strings: TemplateStringsArray,
+//   ...values: string[]
+// ) {
+//   let str = '';
+//   strings.forEach((templ, i) => {
+//     let expr = values[i]?
+//     .replace('@@start@@', '<em>')
+//     .replace('@@end@@','</em>') ?? ""
+//     str += templ + expr;
+//   })
+//   return str
+// }
+const results = await search('Ember');
+export {};
